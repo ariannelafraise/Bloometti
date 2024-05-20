@@ -1,0 +1,9 @@
+node_modules/
+mongobackup/
+documentation/
+
+# MongoDB docker volume
+data/
+
+# Secrets
+src/config/config.json
