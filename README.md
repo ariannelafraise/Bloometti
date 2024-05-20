@@ -33,7 +33,7 @@ Create `src/config/config.json`
 {
     "token": "YOUR_BOT_TOKEN",
     "clientId": "YOUR_BOT_CLIENT_ID",
-    "guildId": "YOUR_BOT_GUILD_ID",
+    "guildId": "YOUR_BOT_GUILD_ID"
 }
 ```
 
