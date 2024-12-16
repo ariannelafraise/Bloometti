@@ -21,14 +21,9 @@ class CommandDao {
         fs.readdirSync('commands')
             .filter(file => file.endsWith('Command.js'))
             .forEach(commandFile => {
-                try {
-                    const CommandClass = require(`../commands/${commandFile}`)
-                    const command = new CommandClass()
-                    commands.push(command)
-                } catch (e) {
-                    console.error(e)
-                    throw e
-                }
+                const CommandClass = require(`../commands/${commandFile}`)
+                const command = new CommandClass()
+                commands.push(command)
             })
         return commands
     }

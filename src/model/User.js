@@ -31,7 +31,7 @@ class User {
         return new User({
             discordId: discordId,
             username: username,
-            ephemeralMode: DEEFAULT_EPHEMERAL,
+            ephemeralMode: DEFAULT_EPHEMERAL,
             color: DEFAULT_COLOR,
             rank: 'user',
             chatting: {

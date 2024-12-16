@@ -18,7 +18,7 @@ class MessageCreateEvent extends Event {
     async execute(message, client) {
         if (message.author.bot) return
 
-        const user = await this.#userService.findById(message.author.id)
+        var user = await this.#userService.findById(message.author.id)
         if (user == null) {
             user = await this.#userService.new(await User.new(message.author.id, message.author.username))
         }

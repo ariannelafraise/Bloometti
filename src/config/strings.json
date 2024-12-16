@@ -1,3 +1,4 @@
 {
-    "accessDeniedMessage": "Sorry! Only my developer can use this command."
+    "accessDenied": "Sorry! Only my developer can use this command.",
+    "notRegistered": "You have not been registered yet. Send messages to be registered."
 }

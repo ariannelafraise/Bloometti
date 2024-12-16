@@ -3,6 +3,7 @@ const { SlashCommandBuilder } = require('@discordjs/builders')
 const Command = require('../model/Command')
 const ProfileService = require('../control/ProfileService')
 const UserService = require('../control/UserService')
+const { notRegistered } = require('../config/strings.json')
 
 class ProfileCommand extends Command {
 
@@ -24,6 +25,9 @@ class ProfileCommand extends Command {
     async execute(interaction, client) {
 
         const user = await this.#userService.findById(interaction.user.id)
+        if (user == null) {
+            await interaction.reply({ ephemeral: true, content: notRegistered })
+        }
 
         let profile;
 

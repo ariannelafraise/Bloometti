@@ -12,7 +12,7 @@ const client = new Client({
 		GatewayIntentBits.GuildMembers,
 	],
     partials: [Partials.Channel]
-});
+})
 
 CommandService.getInstance().loadCommands()
 EventService.getInstance().loadEvents(client)

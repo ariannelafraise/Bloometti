@@ -24,36 +24,52 @@ class UserDaoMongoDb extends UserDaoInterface {
     }
 
     async findAll() {
-        const users = await this.#mongoUsers.find({}).toArray()
-        users.forEach(user => user = new User(user, this))
-        return users
+        try {
+            const users = await this.#mongoUsers.find({}).toArray()
+            users.forEach(user => user = new User(user, this))
+            return users
+        } catch (e) {
+            console.error(e);
+        }
     }
 
     async findById(discordId) {
         const query = { discordId: discordId }
-        const user = await this.#mongoUsers.findOne(query)
-        return new User(user, this)
+        try {
+            const user = await this.#mongoUsers.findOne(query)
+            if (user == null)
+                return null
+            return new User(user, this)
+        } catch (e) {
+            console.error(e);
+        }
     }
 
     async new(user) {
-        return new User(await this.#mongoUsers.insertOne(await user.toJson()), this)
+        try {
+            return new User(await this.#mongoUsers.insertOne(await user.toJson()), this)
+        } catch (e) {
+            console.error(e);
+        }
     }
 
     async existsById(discordId) {
-        const query = { discordId: discordId }
-        const user = await this.#mongoUsers.findOne(query)
+        const user = await this.findById(discordId)
         return user !== null
     }
 
     async isDeveloperById(discordId) {
-        const query = { discordId: discordId }
-        const user = await this.#mongoUsers.findOne(query)
+        const user = await this.findById(discordId)
         return user.rank === 'developer'
     }
 
     async setPropertyById(discordId, property, value) {
         const update = { $set: { [property]: value } }
-        await this.#mongoUsers.updateOne({discordId: discordId}, update)
+        try {
+            await this.#mongoUsers.updateOne({discordId: discordId}, update)
+        } catch (e) {
+            console.error(e);
+        }
     }
     
 }

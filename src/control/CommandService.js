@@ -31,12 +31,7 @@ class CommandService {
 
         if (!command) return
 
-        try {
-            command.execute(interaction, client)
-        } catch (error) {
-            console.error(error)
-            interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true })
-        }
+        command.execute(interaction, client)
     }
 }
 

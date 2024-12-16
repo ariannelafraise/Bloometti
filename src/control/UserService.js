@@ -28,7 +28,7 @@ class UserService {
     }
 
     async new(user) {
-        this.#userDao.new(user)
+        return this.#userDao.new(user)
     }
 
     async existsById(discordId) {

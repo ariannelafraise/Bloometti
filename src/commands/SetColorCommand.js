@@ -5,6 +5,7 @@ const Command = require('../model/Command');
 const UserService = require('../control/UserService')
 const ProfileService = require('../control/ProfileService')
 const { defaultColor } = require('../config/defaults.json')
+const { notRegistered } = require('../config/strings.json')
 
 class SetColorCommand extends Command {
 
@@ -29,6 +30,9 @@ class SetColorCommand extends Command {
 
     async execute(interaction, client) {
         const user = await this.#userService.findById(interaction.user.id)
+        if (user == null) {
+            await interaction.reply({ ephemeral: true, content: notRegistered })
+        }
         
         let hexCodeInput = interaction.options.getString('hexcode')
 

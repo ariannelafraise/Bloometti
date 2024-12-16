@@ -1,0 +1,13 @@
+FROM node:20
+
+WORKDIR /bot
+
+COPY . .
+
+RUN npm install
+
+WORKDIR /bot/src
+CMD ["node", "main.js"]
+
+# for some reason, this works for ubuntu 
+# server while the normal Dockerfile doesnt

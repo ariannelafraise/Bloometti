@@ -2,6 +2,7 @@ const { SlashCommandBuilder } = require('@discordjs/builders')
 
 const UserService = require('../control/UserService')
 const Command = require('../model/Command')
+const { notRegistered } = require('../config/strings.json')
 
 class EphemeralCommand extends Command {
 
@@ -19,6 +20,9 @@ class EphemeralCommand extends Command {
 
     async execute(interaction, client) {
         const user = await this.#userService.findById(interaction.user.id)
+        if (user == null) {
+            await interaction.reply({ ephemeral: true, content: notRegistered })
+        }
 
         switch (user.ephemeralMode) {
             case true:
