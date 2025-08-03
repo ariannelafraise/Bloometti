@@ -1,4 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders')
+const { MessageFlags } = require('discord.js')
 
 const UserService = require('../control/UserService')
 const Command = require('../model/Command')
@@ -25,11 +26,11 @@ class SayCommand extends Command {
     async execute(interaction, client) {
         const user = await this.#userService.findOrCreateById(interaction.user.id, interaction.user.username)
         if (user.rank != 'developer') { 
-            interaction.reply({ ephemeral: true, content: accessDenied})
+            interaction.reply({ flags: MessageFlags.Ephemeral, content: accessDenied})
             return
         }
         await interaction.channel.send(interaction.options.getString('message'))
-        interaction.reply({ ephemeral: true, content: 'Message sent.' })
+        interaction.reply({ flags: MessageFlags.Ephemeral, content: 'Message sent.' })
 	}
 }
 

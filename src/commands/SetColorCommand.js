@@ -1,4 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders')
+const { MessageFlags } = require('discord.js')
 
 const Command = require('../model/Command');
 const UserService = require('../control/UserService')
@@ -38,11 +39,11 @@ class SetColorCommand extends Command {
             case true:
                 await this.#userService.update(user, {color: hexCodeInput})
                 const { embed, attachment } = await this.#profileService.generateSetColor(hexCodeInput)
-                interaction.reply({ ephemeral: user.ephemeralMode, embeds: [embed], files: [attachment]});
+                interaction.reply({ flags: user.ephemeralMode ? MessageFlags.Ephemeral : [], embeds: [embed], files: [attachment]});
                 return
 
             case false:
-                interaction.reply({ ephemeral: user.ephemeralMode, content: invalidHex});
+                interaction.reply({ flags: user.ephemeralMode ? MessageFlags.Ephemeral : [], content: invalidHex});
                 return
         }
 	}

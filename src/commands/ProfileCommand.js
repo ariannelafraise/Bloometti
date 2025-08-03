@@ -1,4 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders')
+const { MessageFlags } = require('discord.js')
 
 const Command = require('../model/Command')
 const ProfileService = require('../control/ProfileService')
@@ -31,7 +32,7 @@ class ProfileCommand extends Command {
         const user = await this.#userService.findOrCreateById(userToShow.id, userToShow.username)
         
         var profile = await this.#profileService.generateProfile(user, userToShow.avatarURL())
-        interaction.reply({ephemeral: user.ephemeralMode, embeds: [profile.embed], files: [profile.attachment]})
+        interaction.reply({flags: user.ephemeralMode ? MessageFlags.Ephemeral : [], embeds: [profile.embed], files: [profile.attachment]})
 	}
 }
 

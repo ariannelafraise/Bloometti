@@ -36,20 +36,27 @@ class ProfileService {
     }
 
     async generateProgressBar(user) {
+        const canvasHeight = 100
+        const canvasWidth = 2000
         // Setup canvas
-        const canvas = await Canvas.createCanvas(1000, 25)
+        const canvas = await Canvas.createCanvas(canvasWidth, canvasHeight)
         const context = await canvas.getContext('2d')
 
         // Fill the background
         const background = await Canvas.loadImage('../public/progressBarBackground.jpg')
-        context.drawImage(background, 0, 0, canvas.width, canvas.height)
+        context.drawImage(background, 0, 0)
 
         // Calculate the progress percentage
         const levelCompletionPercentage = Math.floor((user.chatting.expTowardsNextLevel / ChattingService.calculateExpNeededToLevelUp(user.chatting.level)) * 100)
 
         // Fill the progress bar
-        context.fillStyle = user.color
-        context.fillRect(0, 0, 1000 * (levelCompletionPercentage / 100), 25)
+        // context.fillStyle = user.color
+        // context.fillStyle = "#ff43aeb7"
+        // context.fillRect(0, 0, 1000 * (levelCompletionPercentage / 100), 100)
+
+        const progressBar = await Canvas.loadImage('../public/saturne-cropped.png')
+        const progressBarWidth = canvasWidth * (levelCompletionPercentage / 100)
+        context.drawImage(progressBar, 0, 0, progressBarWidth, canvasHeight, 0, 0, progressBarWidth, canvasHeight)
 
         // Export the progress bar image as png
         return new AttachmentBuilder(await canvas.toBuffer(), { name: 'progress-bar.png'})

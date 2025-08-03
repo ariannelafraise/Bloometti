@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders')
-
+const { MessageFlags } = require('discord.js')
 const UserService = require('../control/UserService')
 const Command = require('../model/Command')
 
@@ -22,12 +22,12 @@ class EphemeralCommand extends Command {
         switch (user.ephemeralMode) {
             case true:
                 await this.#userService.update(user, {'ephemeralMode' : false})
-                interaction.reply({ ephemeral: true, content: 'Ephemeral mode toggled off.' })
+                interaction.reply({ flags: MessageFlags.Ephemeral, content: 'Ephemeral mode toggled off.' })
                 break
             
             case false:
                 await this.#userService.update(user, {'ephemeralMode' : true})
-                interaction.reply({ ephemeral: true, content: 'Ephemeral mode toggled on.' })
+                interaction.reply({ flags: MessageFlags.Ephemeral, content: 'Ephemeral mode toggled on.' })
                 break
         }
     }
