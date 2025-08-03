@@ -1,4 +1,4 @@
 {
     "accessDenied": "Sorry! Only my developer can use this command.",
-    "notRegistered": "You have not been registered yet. Send messages to be registered."
+    "invalidHex": "This isn't a valid hex string, please try again."
 }

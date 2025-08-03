@@ -1,5 +1,4 @@
 const Event = require('../model/Event')
-const User = require('../model/User')
 const UserService = require('../control/UserService')
 const ChattingService = require('../control/ChattingService')
 
@@ -18,17 +17,12 @@ class MessageCreateEvent extends Event {
     async execute(message, client) {
         if (message.author.bot) return
 
-        var user = await this.#userService.findById(message.author.id)
-        if (user == null) {
-            user = await this.#userService.new(await User.new(message.author.id, message.author.username))
-        }
-
-        user.setProperty('username', message.author.username)
-        
+        const user = await this.#userService.findOrCreateById(message.author.id, message.author.username)
+        await this.#userService.update(user, {username: message.author.username})
         const leveledUp = await this.#chattingService.expGain(user)
 
-        if (leveledUp)
-            await message.channel.send(`<@${user.discordId}> leveled up to level ${user.chatting.level} ! 😊`);
+        //if (leveledUp)
+        //    message.channel.send(`<@${user.discordId}> leveled up to level ${user.chatting.level} ! 😊`);
     }
 }
 

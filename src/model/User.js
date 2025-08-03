@@ -5,9 +5,7 @@ const {
 
 class User {
 
-    #userDao
-
-    constructor(json, userDao) {
+    constructor(json) {
         this.discordId = json.discordId
         this.username = json.username
         this.ephemeralMode = json.ephemeralMode
@@ -23,11 +21,9 @@ class User {
         this.bankAccount = {
             balance: json.bankAccount.balance
         }
-
-        this.#userDao = userDao
     }
 
-    static async new(discordId, username) {
+    static new(discordId, username) {
         return new User({
             discordId: discordId,
             username: username,
@@ -44,10 +40,10 @@ class User {
             bankAccount: {
                 balance: 0
             }
-        }, null)
+        })
     }
 
-    async toJson() {
+    toJson() {
         return {
             discordId: this.discordId,
             username: this.username,
@@ -67,21 +63,10 @@ class User {
         }
     }
 
-    async isDeveloper() {
-        return await this.#userDao.isDeveloperById(this.discordId)
-    }
-
-    async setProperty(property, value) {
-        const keys = property.split('.')
-        const lastKey = keys.pop()
-
-        let target = this
-        for (const key of keys) {
-            target = target[key]
+    updateFields(updatedFields) {
+        for (const field in updatedFields) {
+            this[field] = updatedFields[field]
         }
-
-        target[lastKey] = value
-        this.#userDao.setPropertyById(this.discordId, property, value)
     }
 }
 

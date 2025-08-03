@@ -1,11 +1,10 @@
 const { SlashCommandBuilder } = require('@discordjs/builders')
-const { AttachmentBuilder, EmbedBuilder } = require('discord.js')
 
 const Command = require('../model/Command');
 const UserService = require('../control/UserService')
 const ProfileService = require('../control/ProfileService')
 const { defaultColor } = require('../config/defaults.json')
-const { notRegistered } = require('../config/strings.json')
+const { invalidHex } = require('../config/strings.json')
 
 class SetColorCommand extends Command {
 
@@ -29,30 +28,22 @@ class SetColorCommand extends Command {
     }
 
     async execute(interaction, client) {
-        const user = await this.#userService.findById(interaction.user.id)
-        if (user == null) {
-            await interaction.reply({ ephemeral: true, content: notRegistered })
-        }
+        const user = await this.#userService.findOrCreateById(interaction.user.id, interaction.user.username)
         
         let hexCodeInput = interaction.options.getString('hexcode')
-
         if (!hexCodeInput.startsWith('#'))
             hexCodeInput = `#${hexCodeInput}`
 
         switch (SetColorCommand.#VALIDHEX.test(hexCodeInput)) {
             case true:
-                user.setProperty('color', hexCodeInput)
+                await this.#userService.update(user, {color: hexCodeInput})
                 const { embed, attachment } = await this.#profileService.generateSetColor(hexCodeInput)
                 interaction.reply({ ephemeral: user.ephemeralMode, embeds: [embed], files: [attachment]});
-                break;
+                return
 
             case false:
-                interaction.reply({ ephemeral: user.ephemeralMode, content:'This isn\'t a valid hex string, please try again.' });
-                break;
-
-            default:
-                interaction.reply({ ephemeral: user.ephemeralMode, content:'Unexpected error.' });
-                break;
+                interaction.reply({ ephemeral: user.ephemeralMode, content: invalidHex});
+                return
         }
 	}
 }

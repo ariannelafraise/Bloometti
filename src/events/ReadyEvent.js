@@ -1,6 +1,5 @@
 const Event = require('../model/Event')
-
-const UserService = require('../control/UserService')
+const LoggingService = require('../control/LoggingService')
 
 class ReadyEvent extends Event {
 
@@ -9,8 +8,10 @@ class ReadyEvent extends Event {
     }
 
     async execute(client) {
-        console.log(`Logged in as ${client.user.tag}\n\nGuilds:`)
-        console.log(client.guilds.cache.map((guild) => guild.name).join('\n'))
+        const guildsList = client.guilds.cache.map(guild => guild.name).join('\n')
+        const log = `Logged in as ${client.user.tag}\n\nGuilds:\n` + guildsList
+        console.log(log)
+        LoggingService.getInstance().log('Startup', log)
     }
 }
 
