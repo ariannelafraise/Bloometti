@@ -3,7 +3,6 @@ const { SlashCommandBuilder } = require('@discordjs/builders')
 const Command = require('../model/Command')
 const ProfileService = require('../control/ProfileService')
 const UserService = require('../control/UserService')
-const { notRegistered } = require('../config/strings.json')
 
 class ProfileCommand extends Command {
 
@@ -23,22 +22,15 @@ class ProfileCommand extends Command {
     }
 
     async execute(interaction, client) {
-
-        const user = await this.#userService.findById(interaction.user.id)
-        if (user == null) {
-            await interaction.reply({ ephemeral: true, content: notRegistered })
-        }
-
-        let profile;
-
-        const interactionRequestedUser = interaction.options.getUser('user')
-        if (interactionRequestedUser) {
-            const requestedUser = await this.#userService.findById(interaction.options.getUser('user').id)
-            profile = await this.#profileService.generateProfile(requestedUser, interactionRequestedUser)
+        let userToShow
+        if (interaction.options.getUser('user')) {
+            userToShow = interaction.options.getUser('user')
         } else {
-            profile = await this.#profileService.generateProfile(user, interaction.user)
+            userToShow = interaction.user
         }
-
+        const user = await this.#userService.findOrCreateById(userToShow.id, userToShow.username)
+        
+        var profile = await this.#profileService.generateProfile(user, userToShow.avatarURL())
         interaction.reply({ephemeral: user.ephemeralMode, embeds: [profile.embed], files: [profile.attachment]})
 	}
 }

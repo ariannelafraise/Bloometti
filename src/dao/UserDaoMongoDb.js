@@ -2,6 +2,7 @@ const User = require('../model/User')
 const MongoDbConnection = require('./MongoDbConnection')
 const UserDaoInterface = require('./UserDaoInterface')
 const { collection: COLLECTION } = require('../config/mongo.json')
+const { default: UserNotFoundException } = require('../errors/UserNotFoundException')
 
 class UserDaoMongoDb extends UserDaoInterface {
 
@@ -24,52 +25,24 @@ class UserDaoMongoDb extends UserDaoInterface {
     }
 
     async findAll() {
-        try {
-            const users = await this.#mongoUsers.find({}).toArray()
-            users.forEach(user => user = new User(user, this))
-            return users
-        } catch (e) {
-            console.error(e);
-        }
+        const users = await this.#mongoUsers.find().toArray()
+        users.forEach(user => user = new User(user))
+        return users
     }
 
     async findById(discordId) {
         const query = { discordId: discordId }
-        try {
-            const user = await this.#mongoUsers.findOne(query)
-            if (user == null)
-                return null
-            return new User(user, this)
-        } catch (e) {
-            console.error(e);
-        }
+        const user = await this.#mongoUsers.findOne(query)
+        if (user === null) throw new UserNotFoundException()
+        else return new User(user)
     }
 
     async new(user) {
-        try {
-            return new User(await this.#mongoUsers.insertOne(await user.toJson()), this)
-        } catch (e) {
-            console.error(e);
-        }
+        await this.#mongoUsers.insertOne(user.toJson())
     }
 
-    async existsById(discordId) {
-        const user = await this.findById(discordId)
-        return user !== null
-    }
-
-    async isDeveloperById(discordId) {
-        const user = await this.findById(discordId)
-        return user.rank === 'developer'
-    }
-
-    async setPropertyById(discordId, property, value) {
-        const update = { $set: { [property]: value } }
-        try {
-            await this.#mongoUsers.updateOne({discordId: discordId}, update)
-        } catch (e) {
-            console.error(e);
-        }
+    async updateById(discordId, updatedFields) {
+        await this.#mongoUsers.updateOne({discordId: discordId}, { $set: updatedFields })
     }
     
 }

@@ -18,8 +18,7 @@ class PingCommand extends Command {
     }
 
     async execute(interaction, client) {
-        const user = await this.#userService.findById(interaction.user.id)
-
+        const user = await this.#userService.findOrCreateById(interaction.user.id, interaction.user.username)
         interaction.reply({ ephemeral: user.ephemeralMode, content: `Current ping: ${client.ws.ping}ms`})
 	}
 }

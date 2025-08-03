@@ -2,7 +2,7 @@ const { SlashCommandBuilder } = require('@discordjs/builders')
 
 const UserService = require('../control/UserService')
 const Command = require('../model/Command')
-const { accessDenied, notRegistered } = require('../config/strings.json')
+const { accessDenied } = require('../config/strings.json')
 
 class SayCommand extends Command {
 
@@ -23,19 +23,13 @@ class SayCommand extends Command {
     }
 
     async execute(interaction, client) {
-        const user = await this.#userService.findById(interaction.user.id)
-        if (user == null) {
-            await interaction.reply({ ephemeral: true, content: notRegistered })
-        }
-
-        // Verify if user has permission to use the command
-        if (!await user.isDeveloper()) { 
-            await interaction.reply({ ephemeral: true, content: accessDenied})
+        const user = await this.#userService.findOrCreateById(interaction.user.id, interaction.user.username)
+        if (user.rank != 'developer') { 
+            interaction.reply({ ephemeral: true, content: accessDenied})
             return
         }
-
         await interaction.channel.send(interaction.options.getString('message'))
-        await interaction.reply({ ephemeral: true, content: 'Message sent.' })
+        interaction.reply({ ephemeral: true, content: 'Message sent.' })
 	}
 }
 

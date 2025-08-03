@@ -11,15 +11,7 @@ class UserDaoInterface {
         throw new Error('Method not implemented')
     }
 
-    async existsById(discordId) {
-        throw new Error('Method not implemented')
-    }
-
-    async isDeveloperById(discordId) {
-        throw new Error('Method not implemented')
-    }
-
-    async setPropertyById(discordId, property, value) {
+    async updateById(discordId, property, value) {
         throw new Error('Method not implemented')
     }
 }
