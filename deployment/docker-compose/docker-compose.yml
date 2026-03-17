@@ -1,5 +1,4 @@
 services:
-
   mongo:
     container_name: mongo
     image: mongo
@@ -12,7 +11,7 @@ services:
   bot:
     container_name: bot
     build:
-      context: ./
+      context: ../..
       dockerfile: Dockerfile
     restart: always
 

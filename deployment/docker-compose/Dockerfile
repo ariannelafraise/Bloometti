@@ -1,6 +1,6 @@
 FROM node:lts-alpine
 
-COPY ../.. /bot
+COPY . /bot
 
 WORKDIR /bot
 RUN npm install
