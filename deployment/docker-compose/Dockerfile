@@ -1,9 +1,8 @@
-FROM node:22
+FROM node:lts-alpine
+
+COPY ../.. /bot
 
 WORKDIR /bot
-
-COPY . .
-
 RUN npm install
 
 WORKDIR /bot/src
