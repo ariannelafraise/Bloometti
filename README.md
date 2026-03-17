@@ -1,24 +1,23 @@
 ![Bloometti logo](media/bloometti.png)
-A Discord bot made with [Discord.js](https://discord.js.org/#/).
-
-[Website](https://arianne.paintilya.dev/projects/bloometti)
+A Discord bot made with [Discord.js](https://discord.js.org/#/) that adds a levels system to Discord!
+It provides configuration through JSON files and the Mongo Express web-based admin interface for MongoDB.
+Easy deployment is made possible through either Docker Compose or Kubernetes.
 
 ## In action
 ![profile embed](media/in-action.png)
 
-## Levels system
-### Commands
-#### /profile [user: @mention]
+## Commands
+### /profile [user: @mention]
 View your profile or the mentionned user's profile.
-#### /ephemeral
+### /ephemeral
 Toggle ephemeral mode. This mode makes all your interactions with the bot hidden from other users.
-#### /setcolor [hexcode*: #FFFFFF]
+### /setcolor [hexcode*: #FFFFFF]
 Set the color of your profile to a specific HEX code.
 
-### Formula
+## Formula
 experienceToNextLevel = (currentLevel * nextLevel) * 50
 
-### Configuration
+## Configuration
 src/config/chatting.json
 ```json
 {
@@ -48,42 +47,41 @@ Create `src/config/config.json`
 ```
 
 ## Deployment
-Deployed with Docker Compose:
-
-*Check Dockerfile and docker-compose.yml.*
 
 Here are the containers:
 - The bot
-- A local MongoDB database on port 27017
-- [mongo-express](https://github.com/mongo-express/mongo-express) (web interface for MongoDB) on port 8081
+- A local MongoDB database
+- [mongo-express](https://github.com/mongo-express/mongo-express) (web interface for MongoDB) available on port 8081
 
-### Start
-```
-$ sudo docker compose up
-```
+### Docker Compose
 
-### Stop
+#### Start
 ```
-$ sudo docker compose down
+$ docker compose up
 ```
 
-### Rebuilding
+#### Stop
 ```
-$ sudo docker compose down --rmi all
-or 
-$ sudo docker compose down
-$ sudo docker image remove bloometti-bot
+$ docker compose down
+```
+
+#### Rebuilding
+```
+$ docker compose down
+$ docker image remove bloometti-bot
+or to remove everything:
+$ docker compose down --rmi all
 
 then
-$ sudo docker compose up --build
+$ docker compose up --build
 ```
 
-## Backing up data
+#### Backing up data
 ```
 $ docker exec -it mongo bash
 $ cd data/db
 ```
-### Export/Import
+#### Export/Import
 **users.json will be located in `data/mongo` on the host system**
 ```
 $ mongoexport --db bloometti --port 27017 --collection users --out=users.json
@@ -91,3 +89,11 @@ $ mongoexport --db bloometti --port 27017 --collection users --out=users.json
 ```
 $ mongoimport --db bloometti --port 27017 --collection users --file users.json
 ```
+
+### Kubernetes
+
+```
+$ kubectl apply -f deployment/k8s
+```
+
+You must provide the persistent volume for the MongoDB database.
