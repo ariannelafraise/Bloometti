@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bloometti-deployment
+  namespace: bloometti
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: bloometti-app
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: bloometti-app
+    spec:
+      containers:
+        - name: bloometti-container
+          image: bloometti:latest
+          imagePullPolicy: Never
