@@ -46,6 +46,8 @@ Create `src/config/config.json`
 }
 ```
 
+Execute `commands_management/deploy-commands-globally.js` to deploy commands.
+
 ## Deployment
 
 Here are the containers:
