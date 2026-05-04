@@ -1,26 +1,33 @@
 const {
     defaultColor: DEFAULT_COLOR,
     defaultEphemeral: DEFAULT_EPHEMERAL,
-} = require('../config/defaults.json')
+} = require("../config/defaults.json");
 
 class User {
+    discordId;
+    username;
+    ephemeralMode;
+    color;
+    rank;
+    chatting;
+    bankAccount;
 
     constructor(json) {
-        this.discordId = json.discordId
-        this.username = json.username
-        this.ephemeralMode = json.ephemeralMode
-        this.color = json.color
-        this.rank = json.rank
+        this.discordId = json.discordId;
+        this.username = json.username;
+        this.ephemeralMode = json.ephemeralMode;
+        this.color = json.color;
+        this.rank = json.rank;
         this.chatting = {
             exp: json.chatting.exp,
             expTowardsNextLevel: json.chatting.expTowardsNextLevel,
             lastMessageTime: json.chatting.lastMessageTime,
             level: json.chatting.level,
-            messageCount: json.chatting.messageCount
-        }
+            messageCount: json.chatting.messageCount,
+        };
         this.bankAccount = {
-            balance: json.bankAccount.balance
-        }
+            balance: json.bankAccount.balance,
+        };
     }
 
     static new(discordId, username) {
@@ -29,18 +36,18 @@ class User {
             username: username,
             ephemeralMode: DEFAULT_EPHEMERAL,
             color: DEFAULT_COLOR,
-            rank: 'user',
+            rank: "user",
             chatting: {
                 exp: 0,
                 expTowardsNextLevel: 0,
                 lastMessageTime: 0,
                 level: 0,
-                messageCount: 0
+                messageCount: 0,
             },
             bankAccount: {
-                balance: 0
-            }
-        })
+                balance: 0,
+            },
+        });
     }
 
     toJson() {
@@ -55,19 +62,19 @@ class User {
                 expTowardsNextLevel: this.chatting.expTowardsNextLevel,
                 lastMessageTime: this.chatting.lastMessageTime,
                 level: this.chatting.level,
-                messageCount: this.chatting.messageCount
+                messageCount: this.chatting.messageCount,
             },
             bankAccount: {
-                balance: this.bankAccount.balance
-            }
-        }
+                balance: this.bankAccount.balance,
+            },
+        };
     }
 
     updateFields(updatedFields) {
         for (const field in updatedFields) {
-            this[field] = updatedFields[field]
+            this[field] = updatedFields[field];
         }
     }
 }
 
-module.exports = User
+module.exports = User;

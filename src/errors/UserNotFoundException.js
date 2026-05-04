@@ -1,7 +1,7 @@
 class UserNotFoundException extends Error {
     constructor() {
-        super('User not found.')
-        this.name = "UserNotFoundException"
+        super("User not found.");
+        this.name = "UserNotFoundException";
     }
 }
 

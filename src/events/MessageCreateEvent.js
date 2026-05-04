@@ -1,28 +1,21 @@
-const Event = require('../model/Event')
-const UserService = require('../control/UserService')
-const ChattingService = require('../control/ChattingService')
+const Event = require("../model/Event");
 
 class MessageCreateEvent extends Event {
-
-    #userService
-    #chattingService
-
-    constructor() {
-        super('messageCreate')
-
-        this.#userService = UserService.getInstance()
-        this.#chattingService = ChattingService.getInstance()
+    constructor(context) {
+        super("messageCreate", context);
     }
 
     async execute(message, client) {
-        if (message.author.bot) return
+        if (message.author.bot) return;
 
-        const user = await this.#userService.findOrCreateById(message.author.id, message.author.username)
-        await this.#userService.update(user, {username: message.author.username})
-        const leveledUp = await this.#chattingService.expGain(user)
-
-        //if (leveledUp)
-        //    message.channel.send(`<@${user.discordId}> leveled up to level ${user.chatting.level} ! 😊`);
+        const user = await this.context.userService.findOrCreateById(
+            message.author.id,
+            message.author.username,
+        );
+        await this.context.userService.update(user, {
+            username: message.author.username,
+        });
+        const leveledUp = await this.context.chattingService.expGain(user);
     }
 }
 

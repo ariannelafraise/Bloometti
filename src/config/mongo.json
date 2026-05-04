@@ -1,5 +1,5 @@
 {
-    "url": "mongodb://mongo:27017",
-    "db": "bloometti",
-    "collection": "users"
+  "url": "mongodb://mongo:27017",
+  "db": "bloometti",
+  "collection": "users"
 }

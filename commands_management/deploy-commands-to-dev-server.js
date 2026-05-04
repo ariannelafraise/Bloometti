@@ -1,37 +1,41 @@
-const fs = require('fs')
-const { REST, Routes } = require('discord.js')
-const { clientId, guildId, token } = require('../src/config/config.json')
+const fs = require("fs");
+const { REST, Routes } = require("discord.js");
+const { clientId, token, guildId } = require("../src/config/config.json");
+const MongoDbConnection = require("../src/dao/MongoDbConnection");
 
-const commands = []
-fs.readdirSync('../src/commands')
-    .filter(file => file.endsWith('Command.js'))
-    .forEach(commandFile => {
+const commands = [];
+fs.readdirSync("src/commands")
+    .filter((file) => file.endsWith("Command.js"))
+    .forEach((commandFile) => {
         try {
-            const CommandClass = require(`../src/commands/${commandFile}`)
-            const command = new CommandClass()
-            commands.push(command.data.toJSON())
+            const CommandClass = require(`../src/commands/${commandFile}`);
+            const command = new CommandClass();
+            commands.push(command.data.toJSON());
         } catch (e) {
-            console.error(e)
-            throw e
+            console.error(e);
+            throw e;
         }
-    })
+    });
 
-const rest = new REST().setToken(token); // SEMICOLON NEEDED FOR SOME REASON
+const rest = new REST().setToken(token);
 
-// and deploy your commands!
 (async () => {
-	try {
-		console.log(`Started refreshing ${commands.length} application (/) commands.`)
+    try {
+        console.log(
+            `Refreshing ${commands.length} application (/) commands...`,
+        );
 
-		// The put method is used to fully refresh all commands in the guild with the current set
-		const data = await rest.put(
-			Routes.applicationGuildCommands(clientId, guildId),
-			{ body: commands },
-		)
+        const data = await rest.put(
+            Routes.applicationGuildCommands(clientId, guildId),
+            {
+                body: commands,
+            },
+        );
 
-		console.log(`Successfully reloaded ${data.length} application (/) commands.`)
-	} catch (error) {
-		// And of course, make sure you catch and log any errors!
-		console.error(error)
-	}
-})()
+        console.log(
+            `Successfully refreshed ${data.length} application (/) commands.`,
+        );
+    } catch (error) {
+        console.error(error);
+    }
+})();

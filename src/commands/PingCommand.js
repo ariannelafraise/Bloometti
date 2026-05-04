@@ -1,26 +1,28 @@
-const { SlashCommandBuilder } = require('@discordjs/builders')
+const { SlashCommandBuilder } = require("@discordjs/builders");
+const { MessageFlags } = require("discord.js");
 
-const UserService = require('../control/UserService')
-const Command = require('../model/Command')
+const Command = require("../model/Command");
 
 class PingCommand extends Command {
-
-    #userService
-
-    constructor() {
+    constructor(context) {
         super(
             new SlashCommandBuilder()
-               .setName('ping')
-               .setDescription('Get the current ping of the bot')
-        )
-
-        this.#userService = UserService.getInstance()
+                .setName("ping")
+                .setDescription("Get the current ping of the bot"),
+            context,
+        );
     }
 
     async execute(interaction, client) {
-        const user = await this.#userService.findOrCreateById(interaction.user.id, interaction.user.username)
-        interaction.reply({ ephemeral: user.ephemeralMode, content: `Current ping: ${client.ws.ping}ms`})
-	}
+        const user = await this.context.userService.findOrCreateById(
+            interaction.user.id,
+            interaction.user.username,
+        );
+        interaction.reply({
+            flags: user.ephemeralMode ? MessageFlags.Ephemeral : [],
+            content: `Current ping: ${client.ws.ping}ms`,
+        });
+    }
 }
 
-module.exports = PingCommand
+module.exports = PingCommand;

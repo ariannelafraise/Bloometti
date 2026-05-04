@@ -46,7 +46,9 @@ Create `src/config/config.json`
 }
 ```
 
-Execute `commands_management/deploy-commands-globally.js` to deploy commands.
+Execute `node commands_management/deploy-commands-globally.js` to deploy commands.
+
+To access developer-only commands, give yourself the rank `developer` in the database.
 
 ## Deployment
 

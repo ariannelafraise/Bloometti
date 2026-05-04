@@ -1,36 +1,34 @@
-const { MongoClient } = require('mongodb')
+const { MongoClient } = require("mongodb");
 
-const { url: URL, db: DB } = require('../config/mongo.json')
-const LoggingService = require('../control/LoggingService')
+const { url: URL, db: DB } = require("../config/mongo.json");
 
 class MongoDbConnection {
-    static #instance = null
-    dbo
-    #loggingService
-    
+    dbo;
+    client;
+    #loggingService;
+
     constructor(loggingService) {
-        if (MongoDbConnection.#instance)
-            throw new Error('Use getInstance() to get the single instance of this class.')
-
-        MongoDbConnection.#instance = this
-        this.#loggingService = loggingService
-        MongoDbConnection.#instance.connect()
-    }
-
-    static getInstance() {
-        if (!MongoDbConnection.#instance)
-            MongoDbConnection.#instance = new MongoDbConnection(LoggingService.getInstance())
-        return MongoDbConnection.#instance
+        this.#loggingService = loggingService;
     }
 
     connect() {
-        const log = 'MongoDB: Connection established.' 
-        const client = new MongoClient(URL)
-        client.connect()
-        console.log(log)
-        this.#loggingService.log('Database', log)
-        this.dbo = client.db(DB)
+        const log = "MongoDB: Connection established.";
+        this.client = new MongoClient(URL);
+        this.client.connect();
+        console.log(log);
+        this.#loggingService.log("Database", log);
+        this.dbo = this.client.db(DB);
+    }
+
+    disconnect() {
+        if (!this.client) return;
+
+        try {
+            this.client.close();
+        } catch (e) {
+            // ignore
+        }
     }
 }
 
-module.exports = MongoDbConnection
+module.exports = MongoDbConnection;

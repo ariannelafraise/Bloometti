@@ -1,33 +1,23 @@
-const EventDao = require('../dao/EventDao')
-
 class EventService {
-    static #instance = null
-    #eventDao
+    #eventDao;
 
-    constructor() {
-        if (EventService.#instance)
-            throw new Error('Use getInstance() to get the single instance of this class.')
-
-        EventService.#instance = this
-        this.#eventDao = EventDao.getInstance()
+    constructor(eventDao) {
+        this.#eventDao = eventDao;
     }
 
-    static getInstance() {
-        if (!EventService.#instance)
-            EventService.#instance = new EventService()
-        return EventService.#instance
-    }
-
-    loadEvents(client) {
-        this.#eventDao.getEvents().forEach(event => {
+    loadEvents(client, context) {
+        this.#eventDao.getEvents(context).forEach((event) => {
             if (event.once) {
-                client.once(event.name, (...args) => event.execute(...args, client))
+                client.once(event.name, (...args) =>
+                    event.execute(...args, client),
+                );
+            } else {
+                client.on(event.name, (...args) =>
+                    event.execute(...args, client),
+                );
             }
-            else {
-                client.on(event.name, (...args) => event.execute(...args, client))
-            }  
-        })
+        });
     }
 }
 
-module.exports = EventService
+module.exports = EventService;

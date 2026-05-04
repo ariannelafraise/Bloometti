@@ -1,11 +1,15 @@
 class Command {
-    constructor(data) {
-        this.data = data
+    data;
+    context;
+
+    constructor(data, context) {
+        this.data = data;
+        this.context = context;
     }
 
     async execute(interaction, client) {
-        throw new Error('Not implemented')
+        throw new Error("Not implemented");
     }
 }
 
-module.exports = Command
+module.exports = Command;
