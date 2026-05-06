@@ -40,7 +40,7 @@ class ProfileCommand extends Command {
         );
 
         var profile = await this.context.profileService.generateProfile(
-            user,
+            userToShow,
             userParam.avatarURL(),
         );
 
