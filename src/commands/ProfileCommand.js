@@ -22,23 +22,30 @@ class ProfileCommand extends Command {
     }
 
     async execute(interaction, client) {
-        let userToShow;
+        let userParam;
         if (interaction.options.getUser("user")) {
-            userToShow = interaction.options.getUser("user");
+            userParam = interaction.options.getUser("user");
         } else {
-            userToShow = interaction.user;
+            userParam = interaction.user;
         }
-        const user = await this.context.userService.findOrCreateById(
-            userToShow.id,
-            userToShow.username,
+
+        const userToShow = await this.context.userService.findOrCreateById(
+            userParam.id,
+            userParam.username,
+        );
+
+        const userRequesting = await this.context.userService.findOrCreateById(
+            interaction.user.id,
+            interaction.user.username,
         );
 
         var profile = await this.context.profileService.generateProfile(
             user,
-            userToShow.avatarURL(),
+            userParam.avatarURL(),
         );
+
         interaction.reply({
-            flags: user.ephemeralMode ? MessageFlags.Ephemeral : [],
+            flags: userRequesting.ephemeralMode ? MessageFlags.Ephemeral : [],
             embeds: [profile.embed],
             files: [profile.attachment],
         });
