@@ -8,14 +8,17 @@ class LeaderboardService {
         const attachment = await this.generateBoard(users);
         const embed = new EmbedBuilder()
             .setColor(user.color)
-            .setTitle("Leaderboard")
+            .setTitle("Leaderboard [TOP 10]")
             .setImage("attachment://Test.png");
         return { embed, attachment };
 
   }
 
   async generateBoard(users) {
-    users.sort((a,b)=>a.chatting.level === b.chatting.level?b.chatting.exp-a.chatting.exp:b.chatting.level-a.chatting.level)
+    users.sort((a,b)=>a.chatting.level === b.chatting.level?b.chatting.exp-a.chatting.exp:b.chatting.level-a.chatting.level);
+    if (users.length > 10){
+      users = users.slice(0, 10);
+    }
     // Setup canvas
     const canvas = await Canvas.createCanvas(700, 53+31*users.length);
     const context = await canvas.getContext("2d");
