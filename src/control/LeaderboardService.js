@@ -8,12 +8,7 @@ class LeaderboardService {
         const attachment = await this.generateBoard(users);
         const embed = new EmbedBuilder()
             .setColor(user.color)
-            .setAuthor({ name: `${user.username}` })
-            .addFields({
-                name: `Leaderboard`,
-                value: `Ranking`,
-                inline: true,
-            })
+            .setTitle("Leaderboard")
             .setImage("attachment://Test.png");
         return { embed, attachment };
 
@@ -50,7 +45,7 @@ class LeaderboardService {
     context.fillRect(490, 0, 2, 1000);
     context.fillRect(590, 0, 2, 1000);
     context.fillRect(699, 0, 2, 1000);
-      context.fillRect(0, 28, 700, 1);
+    context.fillRect(0, 28, 700, 1);
     
     // Export the progress bar image as png
     return new AttachmentBuilder(await canvas.toBuffer(), {
