@@ -1,7 +1,8 @@
 const Canvas = require("canvas");
 const { AttachmentBuilder, EmbedBuilder } = require("discord.js");
+const { Buffer } = require("node:buffer");
 
-const ChattingService = require("./ChattingService");
+const ProfileService = require("./ProfileService");
 
 class LeaderboardService {
   async generateLeaderboard(user, users){
@@ -33,10 +34,17 @@ class LeaderboardService {
     context.fillText("Username", 100, 25);
     context.fillText("Level", 500, 25);
     context.fillText("EXP", 600, 25);
-    users.forEach((user, index) => {
-      let rank = index+1;
-      let height = 53+31*index
-      let lineGrad = context.createLinearGradient(0, height-26, 698, height+15);
+
+    let height;
+    let bar;
+    let lineGrad;
+    for (const user of users) {
+      const index = users.indexOf(user);
+      height = 53+31*index;
+      bar = await ProfileService.generateProgressBar(user, 85, 10);
+      bar = Buffer.from(bar.attachment,"binary").toString("base64");
+      bar = await Canvas.loadImage("data:image/png;base64,"+bar);
+      lineGrad = context.createLinearGradient(0, height-26, 698, height+15);
       lineGrad.addColorStop(0, user.color+ "A9");
       lineGrad.addColorStop(1, "transparent");
       context.fillStyle = lineGrad ;
@@ -45,8 +53,9 @@ class LeaderboardService {
       context.fillText(index+1, 0, height);
       context.fillText(user.username, 102, height);
       context.fillText(user.chatting.level, 502, height);
-      context.fillText(user.chatting.exp, 602, height);
-    });
+      //context.fillText(user.chatting.exp, 602, height);
+      context.drawImage(bar, 602, height-bar.height, bar.width, bar.height);
+    }
     context.fillRect(0, 0, 2, 1000);
     context.fillRect(0, 0, 2, 1000);
     context.fillRect(90, 0, 2, 1000);
