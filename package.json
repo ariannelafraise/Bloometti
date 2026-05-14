@@ -1,8 +1,8 @@
 {
   "dependencies": {
-    "axios": "^1.11.0",
-    "canvas": "^3.1.2",
-    "discord.js": "^14.21.0",
-    "mongodb": "^6.18.0"
+    "axios": "^1.16.1",
+    "canvas": "^3.2.3",
+    "discord.js": "^14.26.4",
+    "mongodb": "^7.2.0"
   }
 }
