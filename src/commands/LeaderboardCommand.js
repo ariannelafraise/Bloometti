@@ -8,7 +8,7 @@ class LeaderboardCommand extends Command {
         super(
             new SlashCommandBuilder()
                 .setName("leaderboard")
-                .setDescription("See the server's leaderboard"),
+                .setDescription("See the leaderboard"),
             context,
         );
     }

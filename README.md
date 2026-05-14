@@ -13,6 +13,8 @@ View your profile or the mentionned user's profile.
 Toggle ephemeral mode. This mode makes all your interactions with the bot hidden from other users.
 ### /setcolor [hexcode*: #FFFFFF]
 Set the color of your profile to a specific HEX code.
+### /leaderboard
+See the leaderboard.
 
 ## Formula
 experienceToNextLevel = (currentLevel * nextLevel) * 50
