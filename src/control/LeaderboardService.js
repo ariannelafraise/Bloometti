@@ -32,11 +32,11 @@ class LeaderboardService {
     // Background color
     context.fillStyle = "#1e1e2e";
     context.fillRect(0, 0, canvas.width, canvas.height);
-    // Text and lines
     const textColor = "#cdd6f4";
-    this.drawTable(context, textColor, canvas.width, canvas.height);
-    // Raws
+    // Rows
     await this.drawRows(context, textColor, users, page);
+    // Titles and lines
+    this.drawTable(context, textColor, canvas.width, canvas.height);
     // Export the progress bar image as png
     return new AttachmentBuilder(await canvas.toBuffer(), {
         name: "leaderboard.png",
