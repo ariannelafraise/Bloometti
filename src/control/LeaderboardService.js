@@ -56,6 +56,7 @@ class LeaderboardService {
     context.fillStyle = "#1e1e2e";
     context.fillRect(0, 0, canvas.width, canvas.height);
     const textColor = "#cdd6f4";
+    context.font = "24px";
     // Rows
     await this.drawRows(context, textColor, users, page);
     // Titles and lines
@@ -82,7 +83,6 @@ class LeaderboardService {
   }
 
   drawTable(ctx, color, width, height){
-    ctx.font = "24px";
     ctx.fillStyle = color;
     // Tiltes
     ctx.fillText("Rank", 10, 25);
