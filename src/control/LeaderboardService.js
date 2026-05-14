@@ -5,13 +5,19 @@ const { Buffer } = require("node:buffer");
 const ProfileService = require("./ProfileService");
 
 class LeaderboardService {
+  #profileService;
+
+  constructor(profileService) {
+    this.#profileService = profileService;
+  }
+
   async generateLeaderboard(user, users){
-        const attachment = await this.generateBoard(users);
-        const embed = new EmbedBuilder()
-            .setColor(user.color)
-            .setTitle("Leaderboard [TOP 10]")
-            .setImage("attachment://Test.png");
-        return { embed, attachment };
+    const attachment = await this.generateBoard(users);
+    const embed = new EmbedBuilder()
+      .setColor(user.color)
+      .setTitle("Leaderboard [TOP 10]")
+      .setImage("attachment://Test.png");
+    return { embed, attachment };
 
   }
 
@@ -41,7 +47,7 @@ class LeaderboardService {
     for (const user of users) {
       const index = users.indexOf(user);
       height = 53+31*index;
-      bar = await ProfileService.generateProgressBar(user, 85, 10);
+      bar = await this.#profileService.generateProgressBar(user, 85, 10);
       bar = Buffer.from(bar.attachment,"binary").toString("base64");
       bar = await Canvas.loadImage("data:image/png;base64,"+bar);
       lineGrad = context.createLinearGradient(0, height-26, 698, height+15);
