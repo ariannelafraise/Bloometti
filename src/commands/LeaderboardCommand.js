@@ -19,12 +19,12 @@ class LeaderboardCommand extends Command {
             interaction.user.username,
         );
 
-        var leaderboard = await this.context.leaderboardService.generateLeaderboard(
+        const leaderboard = await this.context.leaderboardService.generateLeaderboard(
             user,
         );
         interaction.reply({
-            flags: user.ephemeralMode ? MessageFlags.Ephemeral : [],
-            embeds: [leaderboard.embed],
+            flags: user.ephemeralMode ? [MessageFlags.Ephemeral, MessageFlags.IsComponentsV2] : MessageFlags.IsComponentsV2,
+            components: [leaderboard.container],
             files: [leaderboard.attachment],
         });
     }

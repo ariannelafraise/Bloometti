@@ -1,5 +1,5 @@
 const Canvas = require("canvas");
-const { AttachmentBuilder, EmbedBuilder } = require("discord.js");
+const { AttachmentBuilder, ButtonStyle, ContainerBuilder, resolveColor, ButtonBuilder } = require("discord.js");
 const { Buffer } = require("node:buffer");
 
 class LeaderboardService {
@@ -13,12 +13,37 @@ class LeaderboardService {
   }
 
   async generateLeaderboard(user, page = 1){
-    const attachment = await this.generateBoard(page);
-    const embed = new EmbedBuilder()
-      .setColor(user.color)
-      .setTitle(`Leaderboard [TOP ${this.user_by_page}]`)
-      .setImage("attachment://leaderboard.png");
-    return { embed, attachment };
+    const [attachment, max_page] = await this.generateBoard(page);
+    const container = new ContainerBuilder()
+      .setAccentColor(resolveColor(user.color))
+      .addTextDisplayComponents((textDisplay) =>
+        textDisplay.setContent("# Leaderboard")
+      )
+      .addMediaGalleryComponents((media) =>
+        media.addItems((item) =>
+          item
+            .setDescription("The leaderboard")
+            .setURL("attachment://leaderboard.png")
+        )
+      )
+      .addTextDisplayComponents((textDisplay) =>
+        textDisplay.setContent(`Page ${page}/${max_page}`)
+      )
+      .addActionRowComponents((row) =>
+        row.addComponents(
+          new ButtonBuilder()
+            .setCustomId(`prevPage_${page - 1}`)
+            .setLabel("◀️ Prev")
+            .setStyle(ButtonStyle.Primary)
+            .setDisabled(page <= 1),
+          new ButtonBuilder()
+            .setCustomId(`nextPage_${page + 1}`)
+            .setLabel("Next ▶️")
+            .setStyle(ButtonStyle.Primary)
+            .setDisabled(page >= max_page)
+        )
+      );
+    return { container, attachment };
 
   }
 
@@ -36,9 +61,9 @@ class LeaderboardService {
     // Titles and lines
     this.drawTable(context, textColor, canvas.width, canvas.height);
     // Export the progress bar image as png
-    return new AttachmentBuilder(await canvas.toBuffer(), {
+    return [new AttachmentBuilder(await canvas.toBuffer(), {
         name: "leaderboard.png",
-    });
+    }), max_page];
   }
 
   rankUsers(userA, userB){
@@ -51,7 +76,7 @@ class LeaderboardService {
   async getPage(page = 1) {
     let users = await this.#userService.findAll();
     users.sort(this.rankUsers);
-    const nb_pages = users.length / this.user_by_page; // number of people by page
+    const nb_pages = Math.ceil(users.length / this.user_by_page); // number of people by page
     users = users.slice((page-1)*this.user_by_page, (page-1)*this.user_by_page + this.user_by_page);
     return [users, nb_pages];
   }
