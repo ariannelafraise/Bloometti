@@ -21,7 +21,6 @@ class LeaderboardCommand extends Command {
 
         var leaderboard = await this.context.leaderboardService.generateLeaderboard(
             user,
-            await this.context.userService.findAll(),
         );
         interaction.reply({
             flags: user.ephemeralMode ? MessageFlags.Ephemeral : [],

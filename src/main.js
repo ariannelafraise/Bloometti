@@ -38,7 +38,7 @@ const profileService = new ProfileService();
 
 const commandService = new CommandService(commandDao);
 const eventService = new EventService(eventDao);
-const leaderboardService = new LeaderboardService(profileService);
+const leaderboardService = new LeaderboardService(profileService, userService);
 
 const context = {
     db: db,

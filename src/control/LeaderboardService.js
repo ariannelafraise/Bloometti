@@ -3,16 +3,19 @@ const { AttachmentBuilder, EmbedBuilder } = require("discord.js");
 const { Buffer } = require("node:buffer");
 
 const ProfileService = require("./ProfileService");
+const UserService = require("./UserService");
 
 class LeaderboardService {
   #profileService;
+  #userService;
 
-  constructor(profileService) {
+  constructor(profileService, userService) {
     this.#profileService = profileService;
+    this.#userService = userService;
   }
 
-  async generateLeaderboard(user, users){
-    const attachment = await this.generateBoard(users);
+  async generateLeaderboard(user, page = 1){
+    const attachment = await this.generateBoard(page);
     const embed = new EmbedBuilder()
       .setColor(user.color)
       .setTitle("Leaderboard [TOP 10]")
@@ -21,11 +24,8 @@ class LeaderboardService {
 
   }
 
-  async generateBoard(users) {
-    users.sort(this.rankUsers);
-    if (users.length > 10){
-      users = users.slice(0, 10);
-    }
+  async generateBoard( page = 1 ) {
+    const [users, max_page] = await this.getPage(page);
     // Setup canvas
     const canvas = await Canvas.createCanvas(700, 53+31*users.length);
     const context = await canvas.getContext("2d");
@@ -36,7 +36,7 @@ class LeaderboardService {
     const textColor = "#cdd6f4";
     this.drawTable(context, textColor, canvas.width, canvas.height);
     // Raws
-    await this.drawRaws(context, textColor, users);
+    await this.drawRows(context, textColor, users, page);
     // Export the progress bar image as png
     return new AttachmentBuilder(await canvas.toBuffer(), {
         name: "leaderboard.png",
@@ -48,6 +48,14 @@ class LeaderboardService {
       return userB.chatting.exp-userA.chatting.exp;
     }
     return userB.chatting.level-userA.chatting.level;
+  }
+
+  async getPage(page = 1) {
+    let users = await this.#userService.findAll()
+    users.sort(this.rankUsers);
+    const nb_pages = users.length / 10 // number of people by page
+    users = users.slice((page-1)*10, (page-1)*10 + 10);
+    return [users, nb_pages]
   }
 
   drawTable(ctx, color, width, height){
@@ -67,7 +75,7 @@ class LeaderboardService {
     ctx.fillRect(0, 28, width, 2);
   }
 
-  async drawRaws(ctx, txtColor, usrs){
+  async drawRows(ctx, txtColor, usrs, page){
     // Init variables (optimization)
     let usr;
     let height;
@@ -86,7 +94,7 @@ class LeaderboardService {
       ctx.fillRect(2, height-24, 698, 31);
       // Write user informations
       ctx.fillStyle = txtColor;
-      ctx.fillText(index+1, 10, height); // Rank
+      ctx.fillText(index+1 + (page-1)*10, 10, height); // Rank
       ctx.fillText(usr.username, 100, height); // Username
       ctx.fillText(usr.chatting.level, 500, height); // Level
       // Draw progress bar
