@@ -2,13 +2,10 @@ const Canvas = require("canvas");
 const { AttachmentBuilder, EmbedBuilder } = require("discord.js");
 const { Buffer } = require("node:buffer");
 
-const ProfileService = require("./ProfileService");
-const UserService = require("./UserService");
-
 class LeaderboardService {
   #profileService;
   #userService;
-  user_by_page = 10
+  user_by_page = 10;
 
   constructor(profileService, userService) {
     this.#profileService = profileService;
@@ -52,11 +49,11 @@ class LeaderboardService {
   }
 
   async getPage(page = 1) {
-    let users = await this.#userService.findAll()
+    let users = await this.#userService.findAll();
     users.sort(this.rankUsers);
-    const nb_pages = users.length / this.user_by_page // number of people by page
+    const nb_pages = users.length / this.user_by_page; // number of people by page
     users = users.slice((page-1)*this.user_by_page, (page-1)*this.user_by_page + this.user_by_page);
-    return [users, nb_pages]
+    return [users, nb_pages];
   }
 
   drawTable(ctx, color, width, height){
@@ -91,7 +88,7 @@ class LeaderboardService {
       lineGrad = ctx.createLinearGradient(0, height-26, 698, height+15);
       lineGrad.addColorStop(0, usr.color+ "A9");
       lineGrad.addColorStop(1, "transparent");
-      ctx.fillStyle = lineGrad ;
+      ctx.fillStyle = lineGrad;
       ctx.fillRect(2, height-24, 698, 31);
       // Write user informations
       ctx.fillStyle = txtColor;
