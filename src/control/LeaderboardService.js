@@ -8,6 +8,7 @@ const UserService = require("./UserService");
 class LeaderboardService {
   #profileService;
   #userService;
+  user_by_page = 10
 
   constructor(profileService, userService) {
     this.#profileService = profileService;
@@ -18,7 +19,7 @@ class LeaderboardService {
     const attachment = await this.generateBoard(page);
     const embed = new EmbedBuilder()
       .setColor(user.color)
-      .setTitle("Leaderboard [TOP 10]")
+      .setTitle(`Leaderboard [TOP ${this.user_by_page}]`)
       .setImage("attachment://leaderboard.png");
     return { embed, attachment };
 
@@ -53,8 +54,8 @@ class LeaderboardService {
   async getPage(page = 1) {
     let users = await this.#userService.findAll()
     users.sort(this.rankUsers);
-    const nb_pages = users.length / 10 // number of people by page
-    users = users.slice((page-1)*10, (page-1)*10 + 10);
+    const nb_pages = users.length / this.user_by_page // number of people by page
+    users = users.slice((page-1)*this.user_by_page, (page-1)*this.user_by_page + this.user_by_page);
     return [users, nb_pages]
   }
 
@@ -94,7 +95,7 @@ class LeaderboardService {
       ctx.fillRect(2, height-24, 698, 31);
       // Write user informations
       ctx.fillStyle = txtColor;
-      ctx.fillText(index+1 + (page-1)*10, 10, height); // Rank
+      ctx.fillText(index+1 + (page-1)*this.user_by_page, 10, height); // Rank
       ctx.fillText(usr.username, 100, height); // Username
       ctx.fillText(usr.chatting.level, 500, height); // Level
       // Draw progress bar
