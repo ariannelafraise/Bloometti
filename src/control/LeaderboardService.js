@@ -10,13 +10,20 @@ class LeaderboardService {
         const embed = new EmbedBuilder()
             .setColor(user.color)
             .setTitle("Leaderboard [TOP 10]")
-            .setImage("attachment://Test.png");
+            .setImage("attachment://leaderboard.png");
         return { embed, attachment };
 
   }
 
+  rankUsers(userA, userB){
+    if (userA.chatting.level === userB.chatting.level) {
+      return userB.chatting.exp-userA.chatting.exp;
+    }
+    return userB.chatting.level-userA.chatting.level;
+  }
+
   async generateBoard(users) {
-    users.sort((a,b)=>a.chatting.level === b.chatting.level?b.chatting.exp-a.chatting.exp:b.chatting.level-a.chatting.level);
+    users.sort(this.rankUsers);
     if (users.length > 10){
       users = users.slice(0, 10);
     }
@@ -66,7 +73,7 @@ class LeaderboardService {
     
     // Export the progress bar image as png
     return new AttachmentBuilder(await canvas.toBuffer(), {
-        name: "Test.png",
+        name: "leaderboard.png",
     });
   }
 }
