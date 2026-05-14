@@ -2,9 +2,6 @@ const Canvas = require("canvas");
 const { AttachmentBuilder, EmbedBuilder } = require("discord.js");
 const { Buffer } = require("node:buffer");
 
-const ProfileService = require("./ProfileService");
-const UserService = require("./UserService");
-
 class LeaderboardService {
   #profileService;
   #userService;
