@@ -5,7 +5,7 @@ const ChattingService = require("./ChattingService");
 
 class ProfileService {
     async generateProfile(user, avatarUrl) {
-        const attachment = await this.generateProgressBar(user);
+        const attachment = await this.generateProgressBar(user, 1000, 25);
 
         const embed = new EmbedBuilder()
             .setColor(user.color)
@@ -20,9 +20,9 @@ class ProfileService {
         return { embed, attachment };
     }
 
-    async generateProgressBar(user) {
+    async generateProgressBar(user, w, h) {
         // Setup canvas
-        const canvas = await Canvas.createCanvas(1000, 25);
+        const canvas = await Canvas.createCanvas(w, h);
         const context = await canvas.getContext("2d");
 
         // Fill the background
@@ -42,7 +42,7 @@ class ProfileService {
 
         // Fill the progress bar
         context.fillStyle = user.color;
-        context.fillRect(0, 0, 1000 * (levelCompletionPercentage / 100), 25);
+        context.fillRect(0, 0, canvas.width * (levelCompletionPercentage / 100), canvas.height);
 
         // Export the progress bar image as png
         return new AttachmentBuilder(await canvas.toBuffer(), {

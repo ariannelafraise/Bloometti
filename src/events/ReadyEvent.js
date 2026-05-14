@@ -2,7 +2,7 @@ const Event = require("../model/Event");
 
 class ReadyEvent extends Event {
     constructor(context) {
-        super("ready", context, true);
+        super("clientReady", context, true);
     }
 
     async execute(client) {

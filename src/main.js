@@ -11,6 +11,7 @@ const UserService = require("./control/UserService");
 const ChattingService = require("./control/ChattingService");
 const LoggingService = require("./control/LoggingService");
 const ProfileService = require("./control/ProfileService");
+const LeaderboardService = require("./control/LeaderboardService")
 
 const client = new Client({
     intents: [
@@ -37,6 +38,7 @@ const profileService = new ProfileService();
 
 const commandService = new CommandService(commandDao);
 const eventService = new EventService(eventDao);
+const leaderboardService = new LeaderboardService(profileService, userService);
 
 const context = {
     db: db,
@@ -45,6 +47,7 @@ const context = {
     profileService: profileService,
     loggingService: loggingService,
     commandService: commandService,
+    leaderboardService: leaderboardService
 };
 
 commandService.loadCommands(context);
