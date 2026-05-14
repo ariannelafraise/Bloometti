@@ -19,14 +19,14 @@ class LeaderboardCommand extends Command {
             interaction.user.username,
         );
 
-        var profile = await this.context.leaderboardService.generateLeaderboard(
+        var leaderboard = await this.context.leaderboardService.generateLeaderboard(
             user,
             await this.context.userService.findAll(),
         );
         interaction.reply({
             flags: user.ephemeralMode ? MessageFlags.Ephemeral : [],
-            embeds: [profile.embed],
-            files: [profile.attachment],
+            embeds: [leaderboard.embed],
+            files: [leaderboard.attachment],
         });
     }
 }
