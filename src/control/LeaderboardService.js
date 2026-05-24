@@ -76,14 +76,6 @@ class LeaderboardService {
 
   async getPage(page = 1) {
     let users = await this.#userService.findAll();
-    ////
-    users.push(...users)
-    users.push(...users)
-    users.push(...users)
-    users.push(...users)
-    users.push(...users)
-    users.push(...users)
-    ////
     users.sort(this.rankUsers);
     const nb_pages = Math.ceil(users.length / this.user_by_page); // number of people by page
     users = users.slice((page-1)*this.user_by_page, (page-1)*this.user_by_page + this.user_by_page);
