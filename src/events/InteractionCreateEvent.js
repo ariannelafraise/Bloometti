@@ -15,6 +15,15 @@ class InteractionCreateEvent extends Event {
                 interaction,
                 client,
             );
+        } else if (interaction.isButton()) {
+            const log = `Button '${interaction.customId}' called by ${interaction.user.username}.`;
+            console.log(log);
+            this.context.loggingService.log("Buttons", log);
+            this.context.buttonService.executebutton(
+                interaction.customId,
+                interaction,
+                client,
+            );
         }
     }
 }

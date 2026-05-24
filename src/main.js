@@ -1,11 +1,13 @@
 const { Client, GatewayIntentBits, Partials } = require("discord.js");
 
 const CommandService = require("./control/CommandService");
+const ButtonService = require("./control/ButtonService");
 const EventService = require("./control/EventService");
 const { token } = require("./config/config.json");
 const MongoDbConnection = require("./dao/MongoDbConnection");
 const UserDaoMongoDb = require("./dao/UserDaoMongoDb");
 const CommandDao = require("./dao/CommandDao");
+const ButtonDao = require("./dao/ButtonDao");
 const EventDao = require("./dao/EventDao");
 const UserService = require("./control/UserService");
 const ChattingService = require("./control/ChattingService");
@@ -30,6 +32,7 @@ db.connect();
 
 const userDao = new UserDaoMongoDb(db);
 const commandDao = new CommandDao();
+const buttonDao = new ButtonDao();
 const eventDao = new EventDao();
 
 const userService = new UserService(userDao, loggingService);
@@ -37,6 +40,7 @@ const chattingService = new ChattingService(userService);
 const profileService = new ProfileService();
 
 const commandService = new CommandService(commandDao);
+const buttonService = new ButtonService(buttonDao);
 const eventService = new EventService(eventDao);
 const leaderboardService = new LeaderboardService(profileService, userService);
 
@@ -47,10 +51,12 @@ const context = {
     profileService: profileService,
     loggingService: loggingService,
     commandService: commandService,
+    buttonService: buttonService,
     leaderboardService: leaderboardService
 };
 
 commandService.loadCommands(context);
+buttonService.loadbuttons(context);
 eventService.loadEvents(client, context);
 
 try {
