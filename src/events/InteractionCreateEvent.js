@@ -19,8 +19,15 @@ class InteractionCreateEvent extends Event {
             const log = `Button '${interaction.customId}' called by ${interaction.user.username}.`;
             console.log(log);
             this.context.loggingService.log("Buttons", log);
+            let button;
+            //// This section is specific to paging
+            if (interaction.customId.startsWith("changePage")) {
+                button = "changePage";
+            } else {
+                button = interaction.customId;
+            }
             this.context.buttonService.executebutton(
-                interaction.customId,
+                button,
                 interaction,
                 client,
             );

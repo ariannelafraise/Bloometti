@@ -1,7 +1,7 @@
 const fs = require("fs");
 
 class ButtonDao {
-    getCommands(context) {
+    getButtons(context) {
         const buttons = [];
         fs.readdirSync("buttons")
             .filter((file) => file.endsWith("Button.js"))

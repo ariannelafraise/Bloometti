@@ -8,7 +8,7 @@ class ButtonService {
     }
 
     loadbuttons(context) {
-        this.#buttonDao.getbuttons(context).forEach((button) => {
+        this.#buttonDao.getButtons(context).forEach((button) => {
             this.#buttons.set(button.data.name, button);
         });
     }

@@ -32,12 +32,12 @@ class LeaderboardService {
       .addActionRowComponents((row) =>
         row.addComponents(
           new ButtonBuilder()
-            .setCustomId(`prevPage_${page - 1}`)
+            .setCustomId(`changePage_${page - 1}`)
             .setLabel("◀️ Prev")
             .setStyle(ButtonStyle.Primary)
             .setDisabled(page <= 1),
           new ButtonBuilder()
-            .setCustomId(`nextPage_${page + 1}`)
+            .setCustomId(`changePage_${page + 1}`)
             .setLabel("Next ▶️")
             .setStyle(ButtonStyle.Primary)
             .setDisabled(page >= max_page)
@@ -76,6 +76,14 @@ class LeaderboardService {
 
   async getPage(page = 1) {
     let users = await this.#userService.findAll();
+    ////
+    users.push(...users)
+    users.push(...users)
+    users.push(...users)
+    users.push(...users)
+    users.push(...users)
+    users.push(...users)
+    ////
     users.sort(this.rankUsers);
     const nb_pages = Math.ceil(users.length / this.user_by_page); // number of people by page
     users = users.slice((page-1)*this.user_by_page, (page-1)*this.user_by_page + this.user_by_page);
