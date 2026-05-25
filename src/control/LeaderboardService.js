@@ -66,6 +66,15 @@ class LeaderboardService {
             .setDisabled(page >= max_page)
         )
       );
+
+      container.addActionRowComponents((row) =>
+        row.addComponents(
+            new StringSelectMenuBuilder()
+        			.setCustomId('changePage')
+        			.setPlaceholder('Select page')
+        			.addOptions(...selectMenuOptions)
+          )
+      );
     }
 
     return { container, attachment };
