@@ -8,7 +8,7 @@ class SelectMenuService {
     }
 
     loadselectMenus(context) {
-        this.#selectMenuDao.getselectMenus(context).forEach((selectMenu) => {
+        this.#selectMenuDao.getSelectMenus(context).forEach((selectMenu) => {
             this.#selectMenus.set(selectMenu.data.name, selectMenu);
         });
     }
