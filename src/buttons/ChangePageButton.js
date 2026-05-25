@@ -1,8 +1,8 @@
 const { MessageFlags } = require("discord.js");
 
-const Button = require("../model/Button");
+const Command = require("../model/Command");
 
-class ChangePageButton extends Button {
+class ChangePageButton extends Command {
     constructor(context) {
         super(
             {name:"changePage"},
