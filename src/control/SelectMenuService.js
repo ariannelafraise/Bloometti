@@ -13,7 +13,7 @@ class SelectMenuService {
         });
     }
 
-    async executeselectMenu(selectMenuName, interaction, client) {
+    async executeSelectMenu(selectMenuName, interaction, client) {
         const selectMenu = this.#selectMenus.get(selectMenuName);
 
         if (!selectMenu) return;

@@ -13,7 +13,7 @@ class ButtonService {
         });
     }
 
-    async executebutton(buttonName, interaction, client) {
+    async executeButton(buttonName, interaction, client) {
         const button = this.#buttons.get(buttonName);
 
         if (!button) return;
