@@ -26,8 +26,17 @@ class InteractionCreateEvent extends Event {
             } else {
                 button = interaction.customId;
             }
-            this.context.buttonService.executebutton(
+            this.context.buttonService.executeButton(
                 button,
+                interaction,
+                client,
+            );
+        } else if (interaction.isStringSelectMenu()) {
+            const log = `Select menu '${interaction.customId}' called by ${interaction.user.username}.`;
+            console.log(log);
+            this.context.loggingService.log("SelectMenus", log);
+            this.context.selectMenuService.executeSelectMenu(
+                interaction.customId,
                 interaction,
                 client,
             );
