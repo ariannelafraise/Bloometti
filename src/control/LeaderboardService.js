@@ -83,6 +83,7 @@ class LeaderboardService {
 
   async generateBoard( page = 1 ) {
     const [users, max_page] = await this.getPage(page);
+    page = Utils.clamp(page, 1, max_page);
     // Setup canvas
     const canvas = await Canvas.createCanvas(700, 53+31*users.length);
     const context = await canvas.getContext("2d");
