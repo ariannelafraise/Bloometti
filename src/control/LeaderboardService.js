@@ -1,6 +1,7 @@
 const Canvas = require("canvas");
-const { AttachmentBuilder, ButtonStyle, ContainerBuilder, resolveColor, ButtonBuilder } = require("discord.js");
+const { AttachmentBuilder, ButtonStyle, ContainerBuilder, resolveColor, ButtonBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder } = require("discord.js");
 const { Buffer } = require("node:buffer");
+const Utils = require("../utils/Utils");
 
 class LeaderboardService {
   #profileService;
@@ -14,6 +15,7 @@ class LeaderboardService {
 
   async generateLeaderboard(user, page = 1){
     const [attachment, max_page] = await this.generateBoard(page);
+    page = Utils.clamp(page, 1, max_page);
     const container = new ContainerBuilder()
       .setAccentColor(resolveColor(user.color))
       .addTextDisplayComponents((textDisplay) =>
@@ -28,9 +30,25 @@ class LeaderboardService {
       )
       .addTextDisplayComponents((textDisplay) =>
         textDisplay.setContent(`Page ${page}/${max_page}`)
-      )
-      .addActionRowComponents((row) =>
+      );
+
+    if (max_page > 1) {
+      const selectMenuOptions = [];
+      for (let i = 0; i < max_page; i++) {
+        selectMenuOptions.push(
+          new StringSelectMenuOptionBuilder()
+            .setLabel(`${i+1}`)
+            .setValue(`${i+1}`)
+        );
+      }
+
+      container.addActionRowComponents((row) =>
         row.addComponents(
+          new ButtonBuilder()
+            .setCustomId(`changePage_begin`)
+            .setLabel("⏪ Begin")
+            .setStyle(ButtonStyle.Primary)
+            .setDisabled(page <= 1),
           new ButtonBuilder()
             .setCustomId(`changePage_${page - 1}`)
             .setLabel("◀️ Prev")
@@ -40,9 +58,16 @@ class LeaderboardService {
             .setCustomId(`changePage_${page + 1}`)
             .setLabel("Next ▶️")
             .setStyle(ButtonStyle.Primary)
+            .setDisabled(page >= max_page),
+          new ButtonBuilder()
+            .setCustomId(`changePage_end`)
+            .setLabel("End ⏩")
+            .setStyle(ButtonStyle.Primary)
             .setDisabled(page >= max_page)
         )
       );
+    }
+
     return { container, attachment };
 
   }
@@ -78,6 +103,7 @@ class LeaderboardService {
     let users = await this.#userService.findAll();
     users.sort(this.rankUsers);
     const nb_pages = Math.ceil(users.length / this.user_by_page); // number of people by page
+    page = Utils.clamp(page, 1, nb_pages);
     users = users.slice((page-1)*this.user_by_page, (page-1)*this.user_by_page + this.user_by_page);
     return [users, nb_pages];
   }

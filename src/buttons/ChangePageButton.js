@@ -16,7 +16,15 @@ class ChangePageButton extends Button {
             interaction.user.username,
         );
 
-        const page = parseInt(interaction.customId.split("_")[1]);
+        let page = interaction.customId.split("_")[1];
+
+        if (page === "begin") {
+            page = 1;
+        } else if (page === "end") {
+            page = Infinity;
+        } else {
+            page = parseInt(page);
+        }
 
         const leaderboard = await this.context.leaderboardService.generateLeaderboard(
             user,
