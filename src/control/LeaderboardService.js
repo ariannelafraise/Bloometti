@@ -33,8 +33,11 @@ class LeaderboardService {
       );
 
     if (max_page > 1) {
+      const lowerBound = page < 11 ? 0 : page - 10;
+      const upperBound = page + 10 > max_page ? max_page : page + 10;
       const selectMenuOptions = [];
-      for (let i = 0; i < max_page; i++) {
+      for (let i = lowerBound; i < upperBound; i++) {
+        if (i === page-1) continue;
         selectMenuOptions.push(
           new StringSelectMenuOptionBuilder()
             .setLabel(`${i+1}`)
