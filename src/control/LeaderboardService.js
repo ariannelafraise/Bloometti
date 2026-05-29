@@ -13,11 +13,11 @@ class LeaderboardService {
     this.#userService = userService;
   }
 
-  async generateLeaderboard(user, page = 1){
+  async generateLeaderboard(color, page = 1){
     const [attachment, max_page] = await this.generateBoard(page);
     page = Utils.clamp(page, 1, max_page);
     const container = new ContainerBuilder()
-      .setAccentColor(resolveColor(user.color))
+      .setAccentColor(resolveColor(color))
       .addTextDisplayComponents((textDisplay) =>
         textDisplay.setContent("# Leaderboard")
       )

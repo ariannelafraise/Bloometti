@@ -27,7 +27,7 @@ class ChangePageButton extends Command {
         }
 
         const leaderboard = await this.context.leaderboardService.generateLeaderboard(
-            user,
+            user.color,
             page
         );
         interaction.update({

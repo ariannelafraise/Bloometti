@@ -19,7 +19,7 @@ class ChangePageSelectMenu extends Command {
         const page = parseInt(interaction.values[0]);
 
         const leaderboard = await this.context.leaderboardService.generateLeaderboard(
-            user,
+            user.color,
             page
         );
         interaction.update({

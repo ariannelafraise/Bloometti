@@ -20,7 +20,7 @@ class LeaderboardCommand extends Command {
         );
 
         const leaderboard = await this.context.leaderboardService.generateLeaderboard(
-            user,
+            user.color,
         );
         interaction.reply({
             flags: user.ephemeralMode ? [MessageFlags.Ephemeral, MessageFlags.IsComponentsV2] : MessageFlags.IsComponentsV2,
