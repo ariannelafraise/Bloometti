@@ -14,8 +14,8 @@ class LeaderboardService {
   }
 
   async generateLeaderboard(color, page = 1){
-    const [attachment, max_page] = await this.generateBoard(page);
-    page = Utils.clamp(page, 1, max_page);
+    const [attachment, maxPage] = await this.generateBoard(page);
+    page = Utils.clamp(page, 1, maxPage);
     const container = new ContainerBuilder()
       .setAccentColor(resolveColor(color))
       .addTextDisplayComponents((textDisplay) =>
@@ -29,12 +29,12 @@ class LeaderboardService {
         )
       )
       .addTextDisplayComponents((textDisplay) =>
-        textDisplay.setContent(`Page ${page}/${max_page}`)
+        textDisplay.setContent(`Page ${page}/${maxPage}`)
       );
 
-    if (max_page > 1) {
+    if (maxPage > 1) {
       const lowerBound = page < 11 ? 0 : page - 10;
-      const upperBound = page + 10 > max_page ? max_page : page + 10;
+      const upperBound = page + 10 > maxPage ? maxPage : page + 10;
       const selectMenuOptions = [];
       for (let i = lowerBound; i < upperBound; i++) {
         if (i === page-1) continue;
@@ -61,12 +61,12 @@ class LeaderboardService {
             .setCustomId(`changePage_${page + 1}`)
             .setLabel("Next ▶️")
             .setStyle(ButtonStyle.Primary)
-            .setDisabled(page >= max_page),
+            .setDisabled(page >= maxPage),
           new ButtonBuilder()
             .setCustomId(`changePage_end`)
             .setLabel("End ⏩")
             .setStyle(ButtonStyle.Primary)
-            .setDisabled(page >= max_page)
+            .setDisabled(page >= maxPage)
         )
       );
 
@@ -85,8 +85,8 @@ class LeaderboardService {
   }
 
   async generateBoard( page = 1 ) {
-    const [users, max_page] = await this.getPage(page);
-    page = Utils.clamp(page, 1, max_page);
+    const [users, maxPage] = await this.getPage(page);
+    page = Utils.clamp(page, 1, maxPage);
     // Setup canvas
     const canvas = await Canvas.createCanvas(700, 53+31*users.length);
     const context = await canvas.getContext("2d");
@@ -102,7 +102,7 @@ class LeaderboardService {
     // Export the progress bar image as png
     return [new AttachmentBuilder(await canvas.toBuffer(), {
         name: "leaderboard.png",
-    }), max_page];
+    }), maxPage];
   }
 
   rankUsers(userA, userB){
