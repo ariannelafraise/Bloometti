@@ -115,10 +115,10 @@ class LeaderboardService {
   async getPage(page = 1) {
     let users = await this.#userService.findAll();
     users.sort(this.rankUsers);
-    const nb_pages = Math.ceil(users.length / this.user_by_page); // number of people by page
-    page = Utils.clamp(page, 1, nb_pages);
+    const nbPages = Math.ceil(users.length / this.user_by_page); // number of people by page
+    page = Utils.clamp(page, 1, nbPages);
     users = users.slice((page-1)*this.user_by_page, (page-1)*this.user_by_page + this.user_by_page);
-    return [users, nb_pages];
+    return [users, nbPages];
   }
 
   drawTable(ctx, color, width, height){
