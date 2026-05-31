@@ -18,9 +18,9 @@ class ChangePageButton extends Command {
 
         let page = interaction.customId.split("_")[1];
 
-        if (page === "begin") {
+        if (page === "first") {
             page = 1;
-        } else if (page === "end") {
+        } else if (page === "last") {
             page = Infinity;
         } else {
             page = parseInt(page);

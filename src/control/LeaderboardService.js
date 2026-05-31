@@ -56,8 +56,8 @@ class LeaderboardService {
             container.addActionRowComponents((row) =>
                 row.addComponents(
                     new ButtonBuilder()
-                        .setCustomId(`changePage_begin`)
-                        .setLabel("⏪ Begin")
+                        .setCustomId(`changePage_first`)
+                        .setLabel("⏪ First")
                         .setStyle(ButtonStyle.Primary)
                         .setDisabled(page <= 1),
                     new ButtonBuilder()
@@ -71,8 +71,8 @@ class LeaderboardService {
                         .setStyle(ButtonStyle.Primary)
                         .setDisabled(page >= maxPage),
                     new ButtonBuilder()
-                        .setCustomId(`changePage_end`)
-                        .setLabel("End ⏩")
+                        .setCustomId(`changePage_last`)
+                        .setLabel("Last ⏩")
                         .setStyle(ButtonStyle.Primary)
                         .setDisabled(page >= maxPage)
                 )
