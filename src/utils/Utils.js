@@ -6,6 +6,10 @@ class Utils {
     static timeSinceEpoch() {
         return Math.round(Date.now() / 1000);
     }
+
+    static clamp(val, min, max) {
+        return Math.min(Math.max(val, min), max);
+    }
 }
 
 module.exports = Utils;

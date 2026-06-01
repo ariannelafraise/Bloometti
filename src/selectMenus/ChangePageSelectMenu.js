@@ -1,28 +1,28 @@
-const { SlashCommandBuilder } = require("@discordjs/builders");
 const { MessageFlags } = require("discord.js");
 
 const Command = require("../model/Command");
 
-class LeaderboardCommand extends Command {
+class ChangePageSelectMenu extends Command {
     constructor(context) {
         super(
-            new SlashCommandBuilder()
-                .setName("leaderboard")
-                .setDescription("See the leaderboard"),
+            {name:"changePage"},
             context,
         );
     }
 
     async execute(interaction, client) {
-      const user = await this.context.userService.findOrCreateById(
+        const user = await this.context.userService.findOrCreateById(
             interaction.user.id,
             interaction.user.username,
         );
 
+        const page = parseInt(interaction.values[0]);
+
         const leaderboard = await this.context.leaderboardService.generateLeaderboard(
             user.color,
+            page
         );
-        interaction.reply({
+        interaction.update({
             flags: user.ephemeralMode ? [MessageFlags.Ephemeral, MessageFlags.IsComponentsV2] : MessageFlags.IsComponentsV2,
             components: [leaderboard.container],
             files: [leaderboard.attachment],
@@ -30,4 +30,4 @@ class LeaderboardCommand extends Command {
     }
 }
 
-module.exports = LeaderboardCommand;
+module.exports = ChangePageSelectMenu;
